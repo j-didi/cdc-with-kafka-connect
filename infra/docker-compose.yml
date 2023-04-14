@@ -1,0 +1,70 @@
+﻿version: '3'
+
+services:
+
+  onboard-db:
+    container_name: onboard-db
+    image: postgres:15.2
+    env_file: config/onboard-db/onboard-db.env
+    ports: ["5432:5432"]
+    volumes: [./config/onboard-db/onboard.sql:/docker-entrypoint-initdb.d/init.sql]
+    command: "postgres -c wal_level=logical"
+  
+  onboard.api:
+    container_name: onboard-api
+    image: ${DOCKER_REGISTRY-}onboard-api
+    build:
+      context: ../
+      dockerfile: src/Onboard.API/Dockerfile
+    ports: ["5000:80"]
+    environment: [ASPNETCORE_ENVIRONMENT=Development]
+    depends_on: [onboard-db]
+
+  content-db:
+    container_name: content-db
+    build:
+      context: ./config/content-db
+      dockerfile: Dockerfile
+    ports: ["1433:1433"]
+    
+  content-api:
+    container_name: content-api
+    build:
+      context: ../src/content-api
+      dockerfile: Dockerfile
+    ports: ["3000:3000"]
+    depends_on: [content-db]
+    
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.3.0
+    hostname: zookeeper
+    container_name: zookeeper
+    env_file: config/zookeeper/zookeeper.env
+    ports: ["2181:2181"]
+    depends_on: [onboard-db, content-db]
+
+  broker:
+    image: confluentinc/cp-server:7.3.0
+    hostname: broker
+    container_name: broker
+    env_file: config/broker/broker.env
+    ports: ["9092:9092", "9101:9101"]
+    depends_on: [zookeeper]
+
+  connect:
+    image: cnfldemos/cp-server-connect-datagen:0.6.0-7.3.0
+    hostname: connect
+    container_name: connect
+    env_file: config/connect/connect.env
+    ports: ["8083:8083"]
+    volumes: [./config/connect:/temp]
+    command: "bash -c '/temp/init.sh & /temp/config-connectors.sh'"
+    depends_on: [broker]
+
+  control-center:
+    image: confluentinc/cp-enterprise-control-center:7.3.0
+    hostname: control-center
+    container_name: control-center
+    env_file: config/control-center/control.center.env
+    ports: ["9021:9021"]
+    depends_on: [broker, connect]

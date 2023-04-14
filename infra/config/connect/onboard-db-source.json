@@ -1,0 +1,25 @@
+{
+    "name" : "onboard-db-source",
+    "config": {
+        "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+        "tasks.max": "1",
+        "database.hostname": "host.docker.internal",
+        "database.port": "5432",
+        "database.user": "postgres",
+        "database.password": "X@bLVUv7bKH=xy",
+        "database.dbname": "onboard",
+        "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+        "key.converter.schemas.enable": "false",
+        "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+        "value.converter.schemas.enable": "true",
+        "schema.include.list": "public",
+        "table.include.list": "public.author",
+        "transforms": "unwrap, transform_key",
+        "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
+        "transforms.unwrap.drop.tombstones": "false",
+        "transforms.transform_key.type": "org.apache.kafka.connect.transforms.ExtractField$Key",
+        "transforms.transform_key.field": "id",
+        "topic.prefix": "_onboard",
+        "plugin.name": "pgoutput"
+    }
+}

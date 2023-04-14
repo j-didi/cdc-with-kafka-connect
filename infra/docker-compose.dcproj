@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" Sdk="Microsoft.Docker.Sdk">
+  <PropertyGroup Label="Globals">
+    <ProjectVersion>2.1</ProjectVersion>
+    <DockerTargetOS>Linux</DockerTargetOS>
+    <ProjectGuid>5deb863a-9970-440b-8537-229cad593012</ProjectGuid>
+    <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
+    <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
+    <DockerServiceName>cdc-with-kafka-connect.api</DockerServiceName>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include=".dockerignore" />
+    <Content Include="config\broker\broker.env" />
+    <Content Include="config\connect\config-connectors.sh" />
+    <Content Include="config\connect\connect.env" />
+    <Content Include="config\connect\content-db-sink.json" />
+    <Content Include="config\connect\init.sh" />
+    <Content Include="config\connect\onboard-db-source.json" />
+    <Content Include="config\content-db\content.sql" />
+    <Content Include="config\content-db\Dockerfile" />
+    <Content Include="config\control-center\control.center.env" />
+    <Content Include="config\onboard-db\onboard-db.env" />
+    <Content Include="config\onboard-db\onboard.sql" />
+    <Content Include="config\zookeeper\zookeeper.env" />
+    <Content Include="docker-compose.yml" />
+  </ItemGroup>
+</Project>

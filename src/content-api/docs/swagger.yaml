@@ -1,0 +1,36 @@
+definitions:
+  main.Author:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  main.Response:
+    properties:
+      items:
+        description: |-
+          All current Authors
+          in: body
+        items:
+          $ref: '#/definitions/main.Author'
+        type: array
+    type: object
+info:
+  contact: {}
+  title: Gin Swagger Example API
+  version: "1.0"
+paths:
+  /authors:
+    get:
+      description: Get all authors
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.Response'
+      tags:
+      - Authors
+swagger: "2.0"

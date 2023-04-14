@@ -1,0 +1,23 @@
+{
+    "name" : "content-db-sink",
+    "config": {
+        "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
+        "tasks.max": "1",
+        "topics": "_onboard.public.author",
+        "dialect.name": "SqlServerDatabaseDialect",
+        "connection.url": "jdbc:sqlserver://host.docker.internal:1433;databaseName=content",
+        "connection.user": "sa",
+        "connection.password": "?8@dtjFy#XCQ9",
+        "table.name.format": "content.author",
+        "connection.attempts": "5",
+        "insert.mode": "upsert",
+        "delete.enabled": true,
+        "pk.fields": "id",
+        "pk.mode": "record_key",
+        "fields.whitelist": "id,name",
+        "transforms": "unwrap",
+        "transforms.unwrap.delete.handling.mode": "none",
+        "transforms.unwrap.drop.tombstones": "false",
+        "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState"
+    }
+}
